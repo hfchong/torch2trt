@@ -65,8 +65,8 @@ def convert_interpolate_trt7(ctx):
     layer = ctx.network.add_resize(input=input_trt)
 
     shape = size
-    if shape != None:
-        if isinstance(shape, collections.Sequence):
+    if shape is not None:
+        if isinstance(shape, collections.abc.Sequence):
             shape = [input.size(0), input.size(1)] + list(shape)
             shape = make_size_wrapper(shape)
         else:
@@ -77,8 +77,8 @@ def convert_interpolate_trt7(ctx):
         layer.set_input(1, shape._trt)
 
     scales = scale_factor
-    if scales != None:
-        if not isinstance(scales, collections.Sequence):
+    if scales is not None:
+        if not isinstance(scales, collections.abc.Sequence):
             scales = [scales] * input_dim
         layer.scales = [1, 1] + list(scales)
 
@@ -88,7 +88,7 @@ def convert_interpolate_trt7(ctx):
     else:
         layer.resize_mode=trt.ResizeMode.NEAREST
 
-    if align_corners != None:
+    if align_corners is not None:
         if trt_version() > '8.0':
             if align_corners:
                 layer.coordinate_transformation = trt.ResizeCoordinateTransformation.ALIGN_CORNERS
